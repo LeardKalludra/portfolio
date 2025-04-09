@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Linkedin, Github, Mail, Code, Terminal, Monitor, FolderGit } from 'lucide-react';
 import leardImage from './leardKalludra.png';
@@ -7,83 +7,46 @@ import defiXImage from './Defi-x.png';
 import portfolioImage from './Portfolio.png';
 
 const Portfolio = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [activeSection, setActiveSection] = React.useState('home');
+  const [showScrollToTop, setShowScrollToTop] = React.useState(false);
+  
+  const sections = React.useMemo(() => ['home', 'about', 'skills', 'projects', 'contact'], []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'skills', 'projects', 'contact'];
-      const scrollPosition = window.scrollY + 100;
-
-      for (const section of sections) {
+      const scrollPosition = window.scrollY;
+      
+      sections.forEach(section => {
         const element = document.getElementById(section);
         if (element) {
           const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+          if (
+            scrollPosition >= offsetTop - 100 &&
+            scrollPosition < offsetTop + offsetHeight - 100
+          ) {
             setActiveSection(section);
-            break;
           }
         }
-      }
+      });
 
       setShowScrollToTop(window.scrollY > 300);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [sections]);
 
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = React.useCallback((sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const startPosition = window.pageYOffset;
-      const targetPosition = element.offsetTop - 80;
-      const distance = targetPosition - startPosition;
-      const duration = 1000;
-      let start = null;
-
-      const animation = (currentTime) => {
-        if (start === null) start = currentTime;
-        const timeElapsed = currentTime - start;
-        const progress = Math.min(timeElapsed / duration, 1);
-        
-        const ease = (t) => t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
-        
-        window.scrollTo(0, startPosition + (distance * ease(progress)));
-
-        if (timeElapsed < duration) {
-          requestAnimationFrame(animation);
-        }
-      };
-
-      requestAnimationFrame(animation);
+      const offsetTop = element.offsetTop;
+      window.scrollTo({
+        top: offsetTop - 80,
+        behavior: 'smooth'
+      });
     }
-  };
-
-  const scrollToTop = () => {
-    const startPosition = window.pageYOffset;
-    const targetPosition = 0;
-    const distance = targetPosition - startPosition;
-    const duration = 1000;
-    let start = null;
-
-    const animation = (currentTime) => {
-      if (start === null) start = currentTime;
-      const timeElapsed = currentTime - start;
-      const progress = Math.min(timeElapsed / duration, 1);
-      
-      const ease = (t) => t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
-      
-      window.scrollTo(0, startPosition + (distance * ease(progress)));
-
-      if (timeElapsed < duration) {
-        requestAnimationFrame(animation);
-      }
-    };
-
-    requestAnimationFrame(animation);
-  };
+  }, []);
 
   const pageVariants = {
     initial: { opacity: 0, y: 20 },
@@ -453,19 +416,23 @@ const Portfolio = () => {
                 transition={{ duration: 0.5 }}
                 className="hidden md:flex items-center space-x-8"
               >
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="flex items-center text-sm text-slate-400 hover:text-slate-200 transition-all duration-300 group"
-                  >
-                    <span className="mr-2 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
-                    <span className="relative">
-                      {item.name}
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-slate-400 transition-all duration-300 group-hover:w-full"></span>
-                    </span>
-                  </a>
-                ))}
+                {navigation.map((item) => {
+                  const section = item.href.replace('#', '');
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => scrollToSection(section)}
+                      className={`flex items-center text-sm text-slate-400 hover:text-slate-200 transition-all duration-300 group
+                        ${activeSection === section ? 'text-slate-200 border-b-2 border-slate-400' : ''}`}
+                    >
+                      <span className="mr-2 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+                      <span className="relative">
+                        {item.name}
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-slate-400 transition-all duration-300 group-hover:w-full"></span>
+                      </span>
+                    </button>
+                  );
+                })}
               </motion.div>
 
               {/* Mobile Menu Button */}
@@ -488,23 +455,29 @@ const Portfolio = () => {
                   exit={{ opacity: 0, height: 0 }}
                   className="md:hidden mt-4 pb-4 space-y-4 bg-slate-900/50 backdrop-blur-xl rounded-xl p-4"
                 >
-                  {navigation.map((item) => (
-                    <motion.a
-                      key={item.name}
-                      href={item.href}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="flex items-center py-2 text-slate-400 hover:text-slate-200 transition-all duration-300 group"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <span className="mr-2 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
-                      <span className="relative">
-                        {item.name}
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-slate-400 transition-all duration-300 group-hover:w-full"></span>
-                      </span>
-                    </motion.a>
-                  ))}
+                  {navigation.map((item) => {
+                    const section = item.href.replace('#', '');
+                    return (
+                      <motion.button
+                        key={item.name}
+                        onClick={() => {
+                          scrollToSection(section);
+                          setIsMenuOpen(false);
+                        }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className={`flex items-center py-2 text-slate-400 hover:text-slate-200 transition-all duration-300 group w-full
+                          ${activeSection === section ? 'text-slate-200' : ''}`}
+                      >
+                        <span className="mr-2 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+                        <span className="relative">
+                          {item.name}
+                          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-slate-400 transition-all duration-300 group-hover:w-full"></span>
+                        </span>
+                      </motion.button>
+                    );
+                  })}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -1047,23 +1020,11 @@ const Portfolio = () => {
       {/* Scroll to Top Button */}
       {showScrollToTop && (
         <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-[#38B2AC] text-white p-4 rounded-full shadow-lg hover:bg-[#2C9A94] transition-all duration-300 z-50"
-          aria-label="Scroll to top"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-200"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 10l7-7m0 0l7 7m-7-7v18"
-            />
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
           </svg>
         </button>
       )}

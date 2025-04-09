@@ -1,24 +1,19 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   style: {
     postcss: {
-      plugins: [
-        require('tailwindcss'),
-        require('autoprefixer'),
-        require('postcss-flexbugs-fixes'),
-        require('postcss-preset-env')({
-          autoprefixer: {
-            flexbox: 'no-2009'
-          },
-          stage: 3
-        })
-      ]
+      mode: 'file'
     }
   },
   webpack: {
-    alias: {
-      '@': path.resolve(__dirname, 'src')
+    configure: (webpackConfig) => {
+      // Remove ModuleScopePlugin to allow importing from outside src/
+      webpackConfig.resolve.plugins = webpackConfig.resolve.plugins.filter(
+        plugin => !(plugin.constructor && plugin.constructor.name === 'ModuleScopePlugin')
+      );
+      return webpackConfig;
     }
   }
-} 
+}; 
