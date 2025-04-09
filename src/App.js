@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Linkedin, Github, Mail, ArrowUp, Code, Terminal, Monitor ,FolderGit } from 'lucide-react';
+import { Menu, X, Linkedin, Github, Mail, Code, Terminal, Monitor, FolderGit } from 'lucide-react';
 import leardImage from './leardKalludra.png';
 import eApartamentImage from './e-apartament.png';
 import defiXImage from './Defi-x.png';
@@ -8,6 +8,82 @@ import portfolioImage from './Portfolio.png';
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'skills', 'projects', 'contact'];
+      const scrollPosition = window.scrollY + 100;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+
+      setShowScrollToTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const startPosition = window.pageYOffset;
+      const targetPosition = element.offsetTop - 80;
+      const distance = targetPosition - startPosition;
+      const duration = 1000;
+      let start = null;
+
+      const animation = (currentTime) => {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+        
+        const ease = (t) => t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
+        
+        window.scrollTo(0, startPosition + (distance * ease(progress)));
+
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      };
+
+      requestAnimationFrame(animation);
+    }
+  };
+
+  const scrollToTop = () => {
+    const startPosition = window.pageYOffset;
+    const targetPosition = 0;
+    const distance = targetPosition - startPosition;
+    const duration = 1000;
+    let start = null;
+
+    const animation = (currentTime) => {
+      if (start === null) start = currentTime;
+      const timeElapsed = currentTime - start;
+      const progress = Math.min(timeElapsed / duration, 1);
+      
+      const ease = (t) => t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
+      
+      window.scrollTo(0, startPosition + (distance * ease(progress)));
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
 
   const pageVariants = {
     initial: { opacity: 0, y: 20 },
@@ -497,14 +573,14 @@ const Portfolio = () => {
                 >
                   Download CV
                 </motion.a>
-                <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   href="#contact"
                   className="px-6 sm:px-8 py-3 sm:py-4 rounded-full border-2 border-slate-700 text-slate-200 font-medium hover:bg-slate-800/50 shadow-lg shadow-slate-800/10 transition-all duration-300 text-center text-sm sm:text-base"
                 >
                   Contact Me
-                </motion.a>
+                  </motion.a>
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 50 }}
@@ -531,7 +607,7 @@ const Portfolio = () => {
               variants={itemVariants}
               className="flex-1 flex justify-center md:justify-end"
             >
-              <motion.div
+              <motion.div 
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ 
@@ -921,7 +997,7 @@ const Portfolio = () => {
                   >
                     leardkalludra@gmail.com
                   </a>
-                </div>
+              </div>
               </motion.div>
             </div>
           </motion.div>
@@ -967,6 +1043,30 @@ const Portfolio = () => {
           </div>
         </div>
       </motion.footer>
+
+      {/* Scroll to Top Button */}
+      {showScrollToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-[#38B2AC] text-white p-4 rounded-full shadow-lg hover:bg-[#2C9A94] transition-all duration-300 z-50"
+          aria-label="Scroll to top"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
+          </svg>
+        </button>
+      )}
     </motion.div>
   );
 };
