@@ -4,12 +4,15 @@ import { Menu, X, Linkedin, Github, Mail, Code, Terminal, Monitor, FolderGit } f
 import leardImage from './leardKalludra.png';
 import eApartamentImage from './e-apartament.png';
 import defiXImage from './Defi-x.png';
-import portfolioImage from './Portfolio.png';
+import hirehub from './HireHub.png';
+import napolis from './naplis.png';
+import cvFile from './LeardKalludra-CV.pdf';
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeSection, setActiveSection] = React.useState('home');
   const [showScrollToTop, setShowScrollToTop] = React.useState(false);
+  const [notification, setNotification] = React.useState({ show: false, message: '', type: '' });
   
   const sections = React.useMemo(() => ['home', 'about', 'skills', 'projects', 'contact'], []);
 
@@ -116,21 +119,82 @@ const Portfolio = () => {
       technologies: ['HTML', 'CSS', 'JavaScript'],
       link: 'https://e-apartament.netlify.app/',
       image: eApartamentImage
+    }, 
+    {
+      title: 'Hire Hub',
+      description: 'Hire Hub is a free platform connecting recruiters and skilled laborers across various industries. It offers real-time chat, video interviews, job postings, and advanced search filters to streamline the hiring process',
+      technologies: ["HTML", "Tailwind CSS", "JavaScript"],
+      image: hirehub
     },
     {
-      title: 'DeFi-X',
-      description: 'Crypto Wallet revolutionizes cryptocurrency transactions, providing users with a secure digital wallet solution. It enables seamless management of digital assets and robust security features for safeguarding investments.',
-      technologies: ['HTML', 'CSS'],
-      link: 'https://rijonntahiri.netlify.app/others/crypto-wallet/',
-      image: defiXImage
+      title: "Napoli's Italian Restaurant",
+      description: "Napoli's Italian Restaurant serves authentic Italian dishes made with fresh ingredients and traditional recipes. Known for its homemade pizza crusts, vine-ripened tomato sauce, and real provolone cheese, Napoli's offers a variety of pizzas, pastas, subs, and more—all in a warm, welcoming atmosphere.",
+      technologies: ["HTML", "Tailwind CSS", "JavaScript"],
+      link: "https://napolis.netlify.app/",
+      image: napolis
     },
-    {
-      title: 'Personal Portfolio',
-      description: 'A modern portfolio showcasing skills, projects, and experience, built with React.js and Tailwind CSS. The site features responsive design, smooth animations, and project highlights.',
-      technologies: ['React', 'Tailwind CSS'],
-      image: portfolioImage
-    }
+   
+   
   ];
+
+  const Notification = ({ message, type, onClose }) => {
+    React.useEffect(() => {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }, [onClose]);
+
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="absolute inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-xl"
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className={`relative px-8 py-6 rounded-xl shadow-2xl ${
+            type === 'success' 
+              ? 'bg-slate-800/90 border border-slate-600/50 text-slate-200' 
+              : 'bg-slate-800/90 border border-slate-600/50 text-slate-200'
+          } min-w-[300px] max-w-[400px]`}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 rounded-xl"></div>
+          <div className="relative flex flex-col items-center text-center gap-3">
+            {type === 'success' ? (
+              <div className="w-16 h-16 rounded-full bg-slate-700/50 flex items-center justify-center mb-2 border border-slate-600/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-transparent rounded-full animate-pulse"></div>
+                <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-slate-700/50 flex items-center justify-center mb-2 border border-slate-600/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-transparent rounded-full animate-pulse"></div>
+                <svg className="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+            )}
+            <p className="text-lg font-medium bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text">
+              {message}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="absolute top-2 right-2 p-1 rounded-full hover:bg-slate-700/50 transition-colors duration-200 border border-slate-600/50"
+          >
+            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </motion.div>
+      </motion.div>
+    );
+  };
 
   return (
     <motion.div 
@@ -395,16 +459,16 @@ const Portfolio = () => {
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-slate-950/50 backdrop-blur-xl border-b border-slate-700/20"
+        className="fixed top-0 left-0 right-0 z-50 bg-slate-950/50 backdrop-blur-xl border-b border-slate-700/20 py-4"
       >
         <div className="relative">
-          <nav className="container mx-auto px-6 py-4">
+          <nav className="container mx-auto px-8">
             <div className="flex items-center justify-between">
               <motion.h1 
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-2xl font-bold text-slate-200"
+                className="text-3xl font-bold text-slate-200"
               >
                 Leard <span className="text-slate-400">Kalludra</span>
               </motion.h1>
@@ -539,9 +603,8 @@ const Portfolio = () => {
                 <motion.a
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  href="https://drive.google.com/uc?export=download&id=1YOUR_FILE_ID"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={cvFile}
+                  download="LeardKalludra-CV.pdf"
                   className="px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-gradient-to-r from-slate-700 via-slate-800 to-slate-700 text-slate-200 font-medium shadow-lg shadow-slate-800/20 hover:from-slate-600 hover:via-slate-700 hover:to-slate-600 transition-all duration-300 text-center text-sm sm:text-base"
                 >
                   Download CV
@@ -617,29 +680,174 @@ const Portfolio = () => {
         <div className="container mx-auto">
           <motion.div 
             variants={itemVariants}
-            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20"
+            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20 relative overflow-hidden"
           >
-            <div className="flex items-center gap-4 mb-6">
-              <Terminal className="w-8 h-8 text-slate-400" />
-              <h2 className="text-3xl font-bold text-slate-200">About Me</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+            {/* Enhanced space background effects */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-800/20 via-slate-900/20 to-slate-800/20"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(56,189,248,0.05),rgba(0,0,0,0))]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.03),transparent_50%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.03),transparent_50%)]"></div>
+            
+            <div className="relative">
+              <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="space-y-4"
+                className="flex items-center gap-4 mb-8"
               >
-                <p className="text-slate-400">
-                  I'm a front-end developer who learned coding through structured education with experienced teachers and dedicated practice at home. I've built real-world applications like online doctor consultation platforms and second-hand clothing marketplaces. I'm passionate about creating meaningful web experiences and always eager to learn new technologies.
-                </p>
+                <motion.div 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                  <Terminal className="w-8 h-8 text-slate-400 group-hover:text-slate-300 transition-colors duration-300" />
+                </motion.div>
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text">
+                  About Me
+                </h2>
               </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-4"
+                >
+                  <p className="text-slate-400 leading-relaxed">
+                    I'm a front-end developer who learned coding through structured education with experienced teachers and dedicated practice at home. I've built real-world applications like online doctor consultation platforms and second-hand clothing marketplaces. I'm passionate about creating meaningful web experiences and always eager to learn new technologies.
+                  </p>
+                  <div className="flex gap-4 mt-6">
+                    <motion.a
+                      whileHover={{ scale: 1.05, rotate: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                      href="https://github.com/LeardKalludra"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-all duration-300 flex items-center gap-2 group relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                      <Github className="w-5 h-5 group-hover:text-slate-200 transition-colors duration-300" />
+                      <span className="group-hover:text-slate-200 transition-colors duration-300">GitHub</span>
+                    </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.05, rotate: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                      href="https://www.linkedin.com/posts/leard-kalludra-297209312_html-css-webdevelopment-activity-7212853347878330369-uMtX"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-all duration-300 flex items-center gap-2 group relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                      <Linkedin className="w-5 h-5 group-hover:text-slate-200 transition-colors duration-300" />
+                      <span className="group-hover:text-slate-200 transition-colors duration-300">LinkedIn</span>
+                    </motion.a>
+                  </div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="grid grid-cols-2 gap-4"
+                >
+                  {[
+                    { 
+                      name: "React", 
+                      icon: (
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#61DAFB]">
+                          <path fill="currentColor" d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25zm0 17.25c-4.135 0-7.5-3.365-7.5-7.5s3.365-7.5 7.5-7.5 7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5z"/>
+                          <path fill="currentColor" d="M12 5.25c-3.722 0-6.75 3.028-6.75 6.75s3.028 6.75 6.75 6.75 6.75-3.028 6.75-6.75S15.722 5.25 12 5.25zm0 11.25c-2.485 0-4.5-2.015-4.5-4.5s2.015-4.5 4.5-4.5 4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
+                          <circle cx="12" cy="12" r="2.25" fill="currentColor"/>
+                        </svg>
+                      ),
+                      color: "hover:bg-[#61DAFB]/10"
+                    },
+                    { 
+                      name: "JavaScript", 
+                      icon: (
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#F7DF1E]">
+                          <path fill="currentColor" d="M3 3h18v18H3V3zm16.525 13.707c-.131-.821-.666-1.511-2.252-2.155-.552-.259-1.165-.438-1.349-.854-.068-.248-.078-.382-.034-.529.113-.484.687-.629 1.137-.495.293.09.563.315.732.676.775-.507.775-.507 1.316-.844-.203-.314-.304-.451-.439-.586-.473-.528-1.103-.798-2.126-.775l-.528.067c-.507.124-.991.395-1.283.754-.855.968-.608 2.655.427 3.354 1.023.765 2.521.933 2.712 1.653.18.878-.652 1.159-1.475 1.058-.607-.136-.945-.439-1.316-1.002l-1.372.788c.157.359.337.517.607.832 1.305 1.316 4.568 1.249 5.153-.754.021-.067.18-.528.056-1.237l.034.049zm-8.737-5.434h-1.686c0 1.453-.007 2.898-.007 4.354 0 .924.047 1.772-.104 2.033-.247.517-.886.451-1.175.359-.297-.146-.448-.349-.623-.641-.047-.078-.082-.146-.095-.146l-1.368.844c.229.473.563.879.994 1.137.641.383 1.502.507 2.404.305.588-.17 1.095-.519 1.358-1.059.384-.697.302-1.553.299-2.509.008-1.541 0-3.083 0-4.635l.003-.042z"/>
+                        </svg>
+                      ),
+                      color: "hover:bg-[#F7DF1E]/10"
+                    },
+                    { 
+                      name: "HTML/CSS", 
+                      icon: (
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#E34F26]">
+                          <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
+                        </svg>
+                      ),
+                      color: "hover:bg-[#E34F26]/10"
+                    },
+                    { 
+                      name: "Tailwind", 
+                      icon: (
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#38B2AC]">
+                          <path fill="currentColor" d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/>
+                        </svg>
+                      ),
+                      color: "hover:bg-[#38B2AC]/10"
+                    }
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      whileHover={{ scale: 1.05, rotate: 5 }}
+                      className={`p-4 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center gap-3 group ${item.color} transition-colors duration-300 relative overflow-hidden`}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                      {item.icon}
+                      <span className="text-sm text-slate-300 group-hover:text-slate-200 transition-colors duration-300">
+                        {item.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Skills Section */}
+      <motion.section 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        id="skills" 
+        className="relative py-20 px-6 z-10"
+      >
+        <div className="container mx-auto">
+          <motion.div 
+            variants={itemVariants}
+            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20 relative overflow-hidden"
+          >
+            {/* Enhanced space background effects */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-800/20 via-slate-900/20 to-slate-800/20"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(56,189,248,0.05),rgba(0,0,0,0))]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.03),transparent_50%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.03),transparent_50%)]"></div>
+            
+            <div className="relative">
+              <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="grid grid-cols-2 gap-4"
+                className="flex items-center gap-4 mb-8"
               >
+                <motion.div 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                  <Code className="w-8 h-8 text-slate-400 group-hover:text-slate-300 transition-colors duration-300" />
+                </motion.div>
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text">
+                  Skills
+                </h2>
+              </motion.div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {[
                   { 
                     name: "React", 
@@ -662,13 +870,22 @@ const Portfolio = () => {
                     color: "hover:bg-[#F7DF1E]/10"
                   },
                   { 
-                    name: "HTML/CSS", 
+                    name: "HTML", 
                     icon: (
                       <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#E34F26]">
                         <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
                       </svg>
                     ),
                     color: "hover:bg-[#E34F26]/10"
+                  },
+                  { 
+                    name: "CSS", 
+                    icon: (
+                      <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#264DE4]">
+                        <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm9.75 3.75l-.232 2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
+                      </svg>
+                    ),
+                    color: "hover:bg-[#264DE4]/10"
                   },
                   { 
                     name: "Tailwind", 
@@ -679,102 +896,20 @@ const Portfolio = () => {
                     ),
                     color: "hover:bg-[#38B2AC]/10"
                   }
-                ].map((item, index) => (
+                ].map((skill, index) => (
                   <motion.div
                     key={index}
-                    whileHover={{ scale: 1.05 }}
-                    className={`p-3 sm:p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 flex items-center gap-2 group ${item.color} transition-colors duration-300`}
+                    whileHover={{ scale: 1.05, rotate: 5 }}
+                    className={`p-4 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center gap-3 group ${skill.color} transition-colors duration-300 relative overflow-hidden`}
                   >
-                    {item.icon}
-                    <span className="text-xs sm:text-sm text-slate-300 group-hover:text-slate-200 transition-colors duration-300">
-                      {item.name}
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
+                    {skill.icon}
+                    <span className="text-sm text-slate-300 group-hover:text-slate-200 transition-colors duration-300">
+                      {skill.name}
                     </span>
                   </motion.div>
                 ))}
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Skills Section */}
-      <motion.section 
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        id="skills" 
-        className="relative py-20 px-6 z-10"
-      >
-        <div className="container mx-auto">
-          <motion.div 
-            variants={itemVariants}
-            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20"
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <Code className="w-8 h-8 text-slate-400" />
-              <h2 className="text-3xl font-bold text-slate-200">Skills</h2>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {[
-                { 
-                  name: "React", 
-                  icon: (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#61DAFB]">
-                      <path fill="currentColor" d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25zm0 17.25c-4.135 0-7.5-3.365-7.5-7.5s3.365-7.5 7.5-7.5 7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5z"/>
-                      <path fill="currentColor" d="M12 5.25c-3.722 0-6.75 3.028-6.75 6.75s3.028 6.75 6.75 6.75 6.75-3.028 6.75-6.75S15.722 5.25 12 5.25zm0 11.25c-2.485 0-4.5-2.015-4.5-4.5s2.015-4.5 4.5-4.5 4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
-                      <circle cx="12" cy="12" r="2.25" fill="currentColor"/>
-                    </svg>
-                  ),
-                  color: "hover:bg-[#61DAFB]/10"
-                },
-                { 
-                  name: "JavaScript", 
-                  icon: (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#F7DF1E]">
-                      <path fill="currentColor" d="M3 3h18v18H3V3zm16.525 13.707c-.131-.821-.666-1.511-2.252-2.155-.552-.259-1.165-.438-1.349-.854-.068-.248-.078-.382-.034-.529.113-.484.687-.629 1.137-.495.293.09.563.315.732.676.775-.507.775-.507 1.316-.844-.203-.314-.304-.451-.439-.586-.473-.528-1.103-.798-2.126-.775l-.528.067c-.507.124-.991.395-1.283.754-.855.968-.608 2.655.427 3.354 1.023.765 2.521.933 2.712 1.653.18.878-.652 1.159-1.475 1.058-.607-.136-.945-.439-1.316-1.002l-1.372.788c.157.359.337.517.607.832 1.305 1.316 4.568 1.249 5.153-.754.021-.067.18-.528.056-1.237l.034.049zm-8.737-5.434h-1.686c0 1.453-.007 2.898-.007 4.354 0 .924.047 1.772-.104 2.033-.247.517-.886.451-1.175.359-.297-.146-.448-.349-.623-.641-.047-.078-.082-.146-.095-.146l-1.368.844c.229.473.563.879.994 1.137.641.383 1.502.507 2.404.305.588-.17 1.095-.519 1.358-1.059.384-.697.302-1.553.299-2.509.008-1.541 0-3.083 0-4.635l.003-.042z"/>
-                    </svg>
-                  ),
-                  color: "hover:bg-[#F7DF1E]/10"
-                },
-                { 
-                  name: "HTML", 
-                  icon: (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#E34F26]">
-                      <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
-                    </svg>
-                  ),
-                  color: "hover:bg-[#E34F26]/10"
-                },
-                { 
-                  name: "CSS", 
-                  icon: (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#264DE4]">
-                      <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm9.75 3.75l-.232 2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
-                    </svg>
-                  ),
-                  color: "hover:bg-[#264DE4]/10"
-                },
-                { 
-                  name: "Tailwind", 
-                  icon: (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#38B2AC]">
-                      <path fill="currentColor" d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/>
-                    </svg>
-                  ),
-                  color: "hover:bg-[#38B2AC]/10"
-                }
-              ].map((skill, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.05, rotate: 5 }}
-                  className={`p-3 sm:p-4 rounded-lg bg-slate-800/50 border border-slate-700/50 flex items-center gap-2 group ${skill.color} transition-colors duration-300`}
-                >
-                  {skill.icon}
-                  <span className="text-xs sm:text-sm text-slate-300 group-hover:text-slate-200 transition-colors duration-300">
-                    {skill.name}
-                  </span>
-                </motion.div>
-              ))}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -861,7 +996,7 @@ const Portfolio = () => {
         <div className="container mx-auto">
           <motion.div 
             variants={itemVariants}
-            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20"
+            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20 relative"
           >
             <h2 className="text-3xl font-bold mb-6 text-slate-200">Contact Me</h2>
             <div className="flex flex-col md:flex-row gap-8">
@@ -870,8 +1005,46 @@ const Portfolio = () => {
                   e.preventDefault();
                   const formData = new FormData(e.target);
                   const data = Object.fromEntries(formData.entries());
-                  const mailtoLink = `mailto:leardkalludra@gmail.com?subject=${encodeURIComponent(data.subject || 'Contact from Portfolio')}&body=${encodeURIComponent(`Name: ${data.name}\nEmail: ${data.email}\n\n${data.message || ''}`)}`;
-                  window.location.href = mailtoLink;
+                  
+                  fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      access_key: '15cf2744-fed1-4db5-917d-bb68145c48dc',
+                      name: data.name,
+                      email: data.email,
+                      subject: data.subject,
+                      message: data.message
+                    })
+                  })
+                  .then(async (response) => {
+                    if(response.status == 200) {
+                      setNotification({
+                        show: true,
+                        message: "Thank you for your message! I'll get back to you soon.",
+                        type: 'success'
+                      });
+                      e.target.reset();
+                    } else {
+                      const json = await response.json();
+                      setNotification({
+                        show: true,
+                        message: json.message || "Something went wrong! Please try again.",
+                        type: 'error'
+                      });
+                    }
+                  })
+                  .catch((error) => {
+                    setNotification({
+                      show: true,
+                      message: "Something went wrong! Please try again later.",
+                      type: 'error'
+                    });
+                    console.log(error);
+                  });
                 }}>
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -970,9 +1143,20 @@ const Portfolio = () => {
                   >
                     leardkalludra@gmail.com
                   </a>
-              </div>
+                </div>
               </motion.div>
             </div>
+
+            {/* Move notification inside the contact section */}
+            <AnimatePresence>
+              {notification.show && (
+                <Notification
+                  message={notification.message}
+                  type={notification.type}
+                  onClose={() => setNotification({ show: false, message: '', type: '' })}
+                />
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
       </motion.section>
