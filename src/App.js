@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, X, Linkedin, Github, Mail, Code, Terminal, Monitor, FolderGit } from 'lucide-react';
 import leardImage from './leardKalludra.png';
 import eApartamentImage from './e-apartament.png';
@@ -119,12 +119,13 @@ const Portfolio = () => {
       technologies: ['HTML', 'CSS', 'JavaScript'],
       link: 'https://e-apartament.netlify.app/',
       image: eApartamentImage
-    }, 
+    },
     {
       title: 'Hire Hub',
       description: 'Hire Hub is a free platform connecting recruiters and skilled laborers across various industries. It offers real-time chat, video interviews, job postings, and advanced search filters to streamline the hiring process',
       technologies: ["HTML", "Tailwind CSS", "JavaScript"],
-      image: hirehub
+      image: hirehub,
+      link: 'https://viewmyhirehub.online/'
     },
     {
       title: "Napoli's Italian Restaurant",
@@ -136,6 +137,40 @@ const Portfolio = () => {
    
    
   ];
+
+  // Skill categories for tabs
+  const skillTabs = React.useMemo(() => ({
+    Frontend: [
+      { name: 'React', color: 'hover:bg-[#61DAFB]/10', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#61DAFB]"><path fill="currentColor" d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25zm0 17.25c-4.135 0-7.5-3.365-7.5-7.5s3.365-7.5 7.5-7.5 7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5z"/><path fill="currentColor" d="M12 5.25c-3.722 0-6.75 3.028-6.75 6.75s3.028 6.75 6.75 6.75 6.75-3.028 6.75-6.75S15.722 5.25 12 5.25zm0 11.25c-2.485 0-4.5-2.015-4.5-4.5s2.015-4.5 4.5-4.5 4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/><circle cx="12" cy="12" r="2.25" fill="currentColor"/></svg>
+      )},
+      { name: 'JavaScript', color: 'hover:bg-[#F7DF1E]/10', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#F7DF1E]"><path fill="currentColor" d="M3 3h18v18H3V3zm16.525 13.707c-.131-.821-.666-1.511-2.252-2.155-.552-.259-1.165-.438-1.349-.854-.068-.248-.078-.382-.034-.529.113-.484.687-.629 1.137-.495.293.09.563.315.732.676.775-.507.775-.507 1.316-.844-.203-.314-.304-.451-.439-.586-.473-.528-1.103-.798-2.126-.775l-.528.067c-.507.124-.991.395-1.283.754-.855.968-.608 2.655.427 3.354 1.023.765 2.521.933 2.712 1.653.18.878-.652 1.159-1.475 1.058-.607-.136-.945-.439-1.316-1.002l-1.372.788c.157.359.337.517.607.832 1.305 1.316 4.568 1.249 5.153-.754.021-.067.18-.528.056-1.237l.034.049zm-8.737-5.434h-1.686c0 1.453-.007 2.898-.007 4.354 0 .924.047 1.772-.104 2.033-.247.517-.886.451-1.175.359-.297-.146-.448-.349-.623-.641-.047-.078-.082-.146-.095-.146l-1.368.844c.229.473.563.879.994 1.137.641.383 1.502.507 2.404.305.588-.17 1.095-.519 1.358-1.059.384-.697.302-1.553.299-2.509.008-1.541 0-3.083 0-4.635l.003-.042z"/></svg>
+      )},
+      { name: 'HTML', color: 'hover:bg-rose-100', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-rose-400"><path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>
+      )},
+      { name: 'CSS', color: 'hover:bg-blue-100', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400"><path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm9.75 3.75l-.232 2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>
+      )},
+      { name: 'Tailwind', color: 'hover:bg-teal-100', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-teal-400"><path fill="currentColor" d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/></svg>
+      )},
+      { name: 'Next.js', color: 'hover:bg-slate-800/30', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-slate-200"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M9 8h6v2h-3l3 6h-2l-3-6v6H9z" fill="#0F172A"/></svg>
+      )},
+      { name: 'Git', color: 'hover:bg-orange-900/30', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-orange-300"><path fill="currentColor" d="M22.675 12.317L11.68 1.322c-.42-.42-1.102-.42-1.522 0L7.48 3.999l2.14 2.14a2.25 2.25 0 012.846 2.847l2.14 2.14a2.25 2.25 0 11-1.06 1.06l-2.14-2.14a2.25 2.25 0 01-2.846-2.847L6.42 4.94l-4.1 4.1c-.42.42-.42 1.102 0 1.522l10.995 10.995c.42.42 1.102.42 1.522 0l7.838-7.838c.42-.42.42-1.102 0-1.522z"/></svg>
+      )},
+      { name: 'GitHub', color: 'hover:bg-slate-900/30', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-slate-300"><path fill="currentColor" d="M12 2a10 10 0 00-3.162 19.493c.5.092.682-.217.682-.482 0-.237-.01-1.023-.015-1.856-2.775.603-3.36-1.188-3.36-1.188-.455-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.607.069-.607 1.004.07 1.532 1.031 1.532 1.031.892 1.53 2.341 1.088 2.91.833.091-.646.35-1.088.636-1.338-2.217-.252-4.55-1.109-4.55-4.938 0-1.09.39-1.983 1.029-2.681-.103-.253-.446-1.27.098-2.646 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.56 9.56 0 012.504.337c1.91-1.294 2.748-1.025 2.748-1.025.546 1.376.202 2.393.1 2.646.64.698 1.028 1.591 1.028 2.681 0 3.841-2.337 4.683-4.56 4.932.359.309.678.92.678 1.854 0 1.338-.012 2.416-.012 2.744 0 .268.18.58.688.481A10 10 0 0012 2z"/></svg>
+      )},
+      { name: 'Firebase', color: 'hover:bg-amber-900/30', icon: (
+        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-amber-300"><path fill="currentColor" d="M4 20l1.4-12L9 3l2 5-7 12zM11 8l2-3 7 12-9 3-7-2 7-10z"/></svg>
+      )},
+    ],
+  }), []);
+  const [activeSkillTab, setActiveSkillTab] = React.useState('Frontend');
 
   const Notification = ({ message, type, onClose }) => {
     React.useEffect(() => {
@@ -150,51 +185,58 @@ const Portfolio = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-xl"
+        className="absolute inset-0 z-[100] flex items-center justify-center"
       >
+        {/* Backdrop */}
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          className={`relative px-8 py-6 rounded-xl shadow-2xl ${
-            type === 'success' 
-              ? 'bg-slate-800/90 border border-slate-600/50 text-slate-200' 
-              : 'bg-slate-800/90 border border-slate-600/50 text-slate-200'
-          } min-w-[300px] max-w-[400px]`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-gradient-to-br from-violet-950/60 via-indigo-950/50 to-black/40 backdrop-blur-sm"
+        />
+
+        {/* Modal */}
+        <motion.div
+          initial={{ y: 20, opacity: 0, scale: 0.96 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={{ y: 10, opacity: 0, scale: 0.98 }}
+          transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+          className="relative w-full max-w-sm mx-4"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 rounded-xl"></div>
-          <div className="relative flex flex-col items-center text-center gap-3">
-            {type === 'success' ? (
-              <div className="w-16 h-16 rounded-full bg-slate-700/50 flex items-center justify-center mb-2 border border-slate-600/50">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-transparent rounded-full animate-pulse"></div>
-                <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+          <div className="p-[1px] rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600">
+            <div className="rounded-2xl bg-violet-950/70 border border-violet-900/50 backdrop-blur-md px-6 py-5">
+              <div className="flex flex-col items-center text-center gap-3">
+                <div className={`w-14 h-14 rounded-full border flex items-center justify-center shadow-inner ${type === 'success' ? 'bg-emerald-500/15 border-emerald-400/30' : 'bg-rose-500/15 border-rose-400/30'}`}>
+                  {type === 'success' ? (
+                    <svg className="w-7 h-7 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  ) : (
+                    <svg className="w-7 h-7 text-rose-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  )}
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-lg font-semibold text-slate-100">
+                    {type === 'success' ? 'Message sent' : 'Something went wrong'}
+                  </h4>
+                  <p className="text-sm text-slate-300">
+                    {message}
+                  </p>
+                </div>
+                <button
+                  onClick={onClose}
+                  className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700 ring-1 ring-inset ring-violet-400/30 hover:ring-violet-300/40 transition-all"
+                >
+                  Close
+                </button>
               </div>
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-slate-700/50 flex items-center justify-center mb-2 border border-slate-600/50">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-transparent rounded-full animate-pulse"></div>
-                <svg className="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-            )}
-            <p className="text-lg font-medium bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text">
-              {message}
-            </p>
+            </div>
           </div>
-          <button
-            onClick={onClose}
-            className="absolute top-2 right-2 p-1 rounded-full hover:bg-slate-700/50 transition-colors duration-200 border border-slate-600/50"
-          >
-            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </motion.div>
       </motion.div>
     );
   };
+
+  const [cursor, setCursor] = React.useState({ x: 0, y: 0 });
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.div 
@@ -203,255 +245,117 @@ const Portfolio = () => {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="bg-black text-white min-h-screen overflow-hidden relative"
+      className="bg-gradient-to-br from-violet-950 via-indigo-950 to-black text-slate-100 min-h-screen overflow-hidden relative"
+      onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
     >
-      {/* Galaxy Background */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-950 via-slate-900 to-black"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(56,189,248,0.05),rgba(0,0,0,0))]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.03),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.03),transparent_50%)]"></div>
+      {/* Background: aurora ribbons */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        {!prefersReducedMotion && (
+        <motion.div
+          className="absolute -top-1/3 -left-1/4 w-[140%] h-[80%] rotate-[-12deg]"
+            style={{
+            background:
+              'linear-gradient(90deg, rgba(139,92,246,0.08), rgba(217,70,239,0.08) 50%, rgba(99,102,241,0.08))',
+            filter: 'blur(32px)'
+          }}
+          animate={{ x: ['-5%', '5%', '-5%'] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />)}
+        {!prefersReducedMotion && (
+        <motion.div
+          className="absolute top-1/2 -right-1/3 w-[120%] h-[70%] rotate-[18deg]"
+            style={{
+            background:
+              'linear-gradient(90deg, rgba(99,102,241,0.08), rgba(59,130,246,0.08) 50%, rgba(217,70,239,0.08))',
+            filter: 'blur(28px)'
+          }}
+          animate={{ x: ['5%', '-5%', '5%'] }}
+          transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+        />)}
+
+        {/* Sweeping light beam */}
+        {!prefersReducedMotion && (
+          <motion.div
+          className="absolute inset-0"
+            style={{
+            background:
+              'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%)'
+          }}
+          animate={{ backgroundPositionX: ['0%', '200%'] }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+        />)}
+
+        {/* Cursor-follow glow */}
+        {!prefersReducedMotion && (
+          <motion.div
+          className="absolute w-[420px] h-[420px] rounded-full mix-blend-screen"
+            style={{
+            left: cursor.x - 210,
+            top: cursor.y - 210,
+            background:
+              'radial-gradient(circle at center, rgba(168,85,247,0.25), rgba(0,0,0,0) 60%)',
+            filter: 'blur(24px)'
+          }}
+          animate={{ opacity: [0.7, 0.5, 0.7] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />)}
       </div>
 
-      {/* Multiple Rotating Galaxies */}
-      {[...Array(3)].map((_, i) => (
-        <div key={i} className="fixed inset-0 z-0">
-          <motion.svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 1000 1000"
-            className="absolute"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 50 + 30}%`,
-              height: `${Math.random() * 50 + 30}%`,
-            }}
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: Math.random() * 60 + 60, repeat: Infinity, ease: "linear" }}
-          >
-            <defs>
-              <radialGradient id={`galaxyGradient${i}`} cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                <stop offset="0%" stopColor={`rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 0.1)`} />
-                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-              </radialGradient>
-            </defs>
-            <circle cx="500" cy="500" r="400" fill={`url(#galaxyGradient${i})`} />
-            <motion.path
-              d="M500,100 C700,100 900,300 900,500 C900,700 700,900 500,900 C300,900 100,700 100,500 C100,300 300,100 500,100"
-              fill="none"
-              stroke={`rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 0.1)`}
-              strokeWidth="2"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+      {/* Parallax stars and film grain */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        {/* Distant stars */}
+        <div className="absolute inset-0" style={{ transform: 'translateZ(0)' }}>
+          {[...Array(60)].map((_, i) => (
+            <motion.span
+              key={`s1-${i}`}
+              className="absolute block w-[1.5px] h-[1.5px] rounded-full bg-white/18"
+              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+              animate={prefersReducedMotion ? {} : { opacity: [0.2, 0.6, 0.2] }}
+              transition={{ duration: 8 + Math.random() * 8, repeat: Infinity }}
             />
-          </motion.svg>
+          ))}
         </div>
-      ))}
-
-      {/* Constellations */}
-      <div className="fixed inset-0 z-0">
-        {[...Array(5)].map((_, i) => (
-          <motion.svg
-            key={i}
-            className="absolute"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 200 + 100}px`,
-              height: `${Math.random() * 200 + 100}px`,
-            }}
-            viewBox="0 0 100 100"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.5, 0] }}
-            transition={{ duration: Math.random() * 5 + 5, repeat: Infinity }}
-          >
-            {[...Array(5)].map((_, j) => (
-              <motion.line
-                key={j}
-                x1={Math.random() * 100}
-                y1={Math.random() * 100}
-                x2={Math.random() * 100}
-                y2={Math.random() * 100}
-                stroke="rgba(255,255,255,0.1)"
-                strokeWidth="1"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              />
-            ))}
-          </motion.svg>
+        {/* Mid stars (slow drift) */}
+        <div className="absolute inset-0" style={{ transform: 'translateZ(0)' }}>
+          {[...Array(40)].map((_, i) => (
+            <motion.span
+              key={`s2-${i}`}
+              className="absolute block w-[2px] h-[2px] rounded-full bg-white/22"
+              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+              animate={prefersReducedMotion ? {} : { x: [0, 6, 0], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 14 + Math.random() * 8, repeat: Infinity, ease: 'easeInOut' }}
+            />
         ))}
       </div>
-
-      {/* Interactive Space Objects */}
-      <div className="fixed inset-0 z-0">
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute cursor-pointer"
-            style={{
-              width: `${Math.random() * 30 + 20}px`,
-              height: `${Math.random() * 30 + 20}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            whileHover={{ scale: 1.5, rotate: 180 }}
-            whileTap={{ scale: 0.8 }}
-            animate={{
-              rotate: 360,
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              rotate: { duration: Math.random() * 20 + 20, repeat: Infinity, ease: "linear" },
-              scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-            }}
-          >
-            <svg viewBox="0 0 100 100">
-              <motion.path
-                d="M50,10 L90,50 L50,90 L10,50 Z"
-                fill="none"
-                stroke={`rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 0.2)`}
-                strokeWidth="2"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              />
-            </svg>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Rotating Planets with Rings */}
-      <div className="fixed inset-0 z-0">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute"
-            style={{
-              width: `${Math.random() * 100 + 50}px`,
-              height: `${Math.random() * 100 + 50}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            initial={{ rotate: 0, scale: 0.8 }}
-            animate={{ 
-              rotate: 360,
-              scale: [0.8, 1, 0.8],
-            }}
-            transition={{
-              rotate: { duration: Math.random() * 30 + 30, repeat: Infinity, ease: "linear" },
-              scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-            }}
-          >
-            <svg viewBox="0 0 100 100">
-              <circle
-                cx="50"
-                cy="50"
-                r="45"
-                fill={`rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 0.2)`}
-              />
-              <motion.circle
-                cx="50"
-                cy="50"
-                r="40"
-                fill="none"
-                stroke={`rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 0.1)`}
-                strokeWidth="2"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.circle
-                cx="50"
-                cy="50"
-                r="50"
-                fill="none"
-                stroke={`rgba(${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, ${Math.random() * 100 + 150}, 0.1)`}
-                strokeWidth="1"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              />
-            </svg>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Animated Stars */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        {[...Array(300)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-0.5 h-0.5 bg-white/30 rounded-full"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              scale: Math.random() * 1.5,
-              opacity: Math.random() * 0.5 + 0.1
-            }}
-            animate={{
-              scale: [
-                Math.random() * 1.5,
-                Math.random() * 1.5,
-                Math.random() * 1.5
-              ],
-              opacity: [
-                Math.random() * 0.5 + 0.1,
-                Math.random() * 0.5 + 0.1,
-                Math.random() * 0.5 + 0.1
-              ]
-            }}
-            transition={{
-              duration: Math.random() * 10 + 5,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
+        {/* Near stars (tiny twinkle) */}
+        <div className="absolute inset-0" style={{ transform: 'translateZ(0)' }}>
+          {[...Array(25)].map((_, i) => (
+            <motion.span
+              key={`s3-${i}`}
+              className="absolute block w-[2.5px] h-[2.5px] rounded-full bg-white/28"
+              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+              animate={prefersReducedMotion ? {} : { scale: [1, 1.4, 1], opacity: [0.4, 0.9, 0.4] }}
+              transition={{ duration: 6 + Math.random() * 4, repeat: Infinity, ease: 'easeInOut' }}
           />
         ))}
       </div>
-
-      {/* Subtle Shooting Stars */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-0.5 h-0.5 bg-white/20 rounded-full"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              scale: 0
-            }}
-            animate={{
-              x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth
-              ],
-              y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight
-              ],
-              scale: [0, 0.5, 0]
-            }}
-            transition={{
-              duration: Math.random() * 2 + 1,
-              repeat: Infinity,
-              repeatType: "reverse",
-              delay: Math.random() * 5
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Cosmic Dust */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.1),transparent_70%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(168,85,247,0.1),transparent_70%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(139,92,246,0.1),transparent_70%)]"></div>
+        {/* Film grain overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.035] mix-blend-overlay"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml;utf8,\
+              <svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'>\
+                <filter id=\'n\'>\
+                  <feTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/>\
+                  <feColorMatrix type=\'saturate\' values=\'0\'/>\
+                </filter>\
+                <rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.6\'/>\
+              </svg>\
+              ")',
+            backgroundSize: '200px 200px'
+          }}
+        />
       </div>
 
       {/* Header */}
@@ -459,26 +363,26 @@ const Portfolio = () => {
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-slate-950/50 backdrop-blur-xl border-b border-slate-700/20 py-4"
+        className="fixed top-0 left-0 right-0 z-50 bg-violet-950/50 backdrop-blur-xl border-b border-violet-800/40 py-3"
       >
         <div className="relative">
           <nav className="container mx-auto px-8">
             <div className="flex items-center justify-between">
               <motion.h1 
-                initial={{ opacity: 0, x: -50 }}
+                initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-3xl font-bold text-slate-200"
+                transition={{ duration: 0.4 }}
+                className="text-2xl font-bold text-slate-100"
               >
                 Leard <span className="text-slate-400">Kalludra</span>
               </motion.h1>
               
               {/* Desktop Navigation */}
               <motion.div 
-                initial={{ opacity: 0, x: 50 }}
+                initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="hidden md:flex items-center space-x-8"
+                transition={{ duration: 0.4 }}
+                className="hidden md:flex items-center gap-1"
               >
                 {navigation.map((item) => {
                   const section = item.href.replace('#', '');
@@ -486,14 +390,11 @@ const Portfolio = () => {
                     <button
                       key={item.name}
                       onClick={() => scrollToSection(section)}
-                      className={`flex items-center text-sm text-slate-400 hover:text-slate-200 transition-all duration-300 group
-                        ${activeSection === section ? 'text-slate-200 border-b-2 border-slate-400' : ''}`}
+                      className={`relative px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white transition-all duration-300 group ${activeSection === section ? 'bg-violet-900/40 border border-violet-800/50' : 'hover:bg-violet-900/30'}`}
                     >
-                      <span className="mr-2 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
-                      <span className="relative">
-                        {item.name}
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-slate-400 transition-all duration-300 group-hover:w-full"></span>
-                      </span>
+                      <span className="mr-1.5 inline-block align-middle group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+                      <span className="align-middle">{item.name}</span>
+                      <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300 ${activeSection === section ? 'w-6 bg-slate-400' : 'w-0 bg-transparent group-hover:w-6 group-hover:bg-slate-500'}`}></span>
                     </button>
                   );
                 })}
@@ -503,10 +404,10 @@ const Portfolio = () => {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="md:hidden p-2 rounded-full bg-slate-800/50 hover:bg-slate-800/70 transition-all duration-300"
+                className="md:hidden p-2 rounded-full bg-violet-900/40 hover:bg-violet-900/60 transition-all duration-300 border border-violet-800/40"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                {isMenuOpen ? <X className="w-6 h-6 text-slate-200" /> : <Menu className="w-6 h-6 text-slate-200" />}
+                {isMenuOpen ? <X className="w-6 h-6 text-slate-100" /> : <Menu className="w-6 h-6 text-slate-100" />}
               </motion.button>
             </div>
 
@@ -517,7 +418,7 @@ const Portfolio = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="md:hidden mt-4 pb-4 space-y-4 bg-slate-900/50 backdrop-blur-xl rounded-xl p-4"
+                  className="md:hidden mt-3 pb-4 space-y-2 bg-violet-950/60 backdrop-blur-xl rounded-xl p-4 border border-violet-800/40"
                 >
                   {navigation.map((item) => {
                     const section = item.href.replace('#', '');
@@ -530,15 +431,11 @@ const Portfolio = () => {
                         }}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className={`flex items-center py-2 text-slate-400 hover:text-slate-200 transition-all duration-300 group w-full
-                          ${activeSection === section ? 'text-slate-200' : ''}`}
+                        transition={{ duration: 0.25 }}
+                        className={`flex items-center gap-2 py-2 px-2 rounded-lg text-slate-300 hover:text-white hover:bg-violet-900/40 transition-all duration-300 w-full ${activeSection === section ? 'bg-violet-900/40 border border-violet-800/50' : ''}`}
                       >
-                        <span className="mr-2 group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
-                        <span className="relative">
-                          {item.name}
-                          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-slate-400 transition-all duration-300 group-hover:w-full"></span>
-                        </span>
+                        <span className="group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+                        <span>{item.name}</span>
                       </motion.button>
                     );
                   })}
@@ -555,44 +452,35 @@ const Portfolio = () => {
         initial="hidden"
         animate="visible"
         id="home" 
-        className="relative min-h-screen flex items-center pt-24 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 z-10"
+        className="relative min-h-screen flex items-center pt-28 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 z-10"
       >
         <div className="container mx-auto">
-          <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-8 md:gap-12">
+          <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-10 md:gap-14">
             <motion.div variants={itemVariants} className="flex-1 text-center md:text-left max-w-2xl mx-auto md:mx-0">
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-block mb-4 px-3 py-1 rounded-full border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm"
+                className="inline-flex items-center gap-2 mb-5 pl-2 pr-3 py-1 rounded-full border border-violet-800/40 bg-violet-950/40 backdrop-blur-sm"
               >
-                <span className="text-xs sm:text-sm font-medium bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text">
-                  Welcome to my portfolio
-                </span>
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span className="text-xs sm:text-sm font-medium text-slate-300">Open for new opportunities</span>
               </motion.div>
               <motion.h1 
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text"
+                className="text-5xl sm:text-6xl md:text-7xl font-extrabold mb-4 sm:mb-6"
               >
-                Hi, It's <span className="text-slate-400">Leard</span>
+                <span className="bg-gradient-to-r from-violet-300 via-indigo-300 to-blue-300 text-transparent bg-clip-text">Hello, I’m Leard Kalludra</span>
               </motion.h1>
-              <motion.h2
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-6 text-slate-400 font-light"
-              >
-                Frontend Developer
-              </motion.h2>
               <motion.p
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7 }}
-                className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8 max-w-2xl mx-auto md:mx-0"
+                className="text-base sm:text-lg text-slate-300 mb-6 sm:mb-8 max-w-2xl mx-auto md:mx-0"
               >
-                I'm a passionate developer who learned coding through structured education and dedicated practice. With guidance from experienced teachers and countless hours of hands-on practice at home, I've developed a strong foundation in web development. I love transforming ideas into elegant digital solutions and continuously improving my skills through real-world projects.
+                Frontend developer focused on React, Next.js and Tailwind CSS. I’m on track to complete my programming learning Jurney and become a Full‑Stack Developer by July. I turn ideas into polished, accessible products with clean code, smooth motion, and real performance.
               </motion.p>
               <motion.div 
                 initial={{ opacity: 0, y: 50 }}
@@ -605,17 +493,17 @@ const Portfolio = () => {
                   whileTap={{ scale: 0.95 }}
                   href={cvFile}
                   download="LeardKalludra-CV.pdf"
-                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-gradient-to-r from-slate-700 via-slate-800 to-slate-700 text-slate-200 font-medium shadow-lg shadow-slate-800/20 hover:from-slate-600 hover:via-slate-700 hover:to-slate-600 transition-all duration-300 text-center text-sm sm:text-base"
+                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-violet-600 text-white font-medium shadow-lg hover:bg-violet-700 transition-all duration-300 text-center text-sm sm:text-base"
                 >
                   Download CV
                 </motion.a>
                   <motion.a
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                  href="#contact"
-                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-full border-2 border-slate-700 text-slate-200 font-medium hover:bg-slate-800/50 shadow-lg shadow-slate-800/10 transition-all duration-300 text-center text-sm sm:text-base"
+                  href="#projects"
+                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-full border-2 border-violet-400 text-violet-200 font-medium hover:bg-violet-900/30 transition-all duration-300 text-center text-sm sm:text-base"
                 >
-                  Contact Me
+                  View Projects
                   </motion.a>
               </motion.div>
               <motion.div 
@@ -632,9 +520,9 @@ const Portfolio = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.2, rotate: 360 }}
                     whileTap={{ scale: 0.9 }}
-                    className={`p-3 sm:p-4 border-2 border-slate-700 bg-slate-800/50 rounded-full hover:bg-slate-800/70 transition-all duration-300 shadow-lg shadow-slate-800/10 ${link.color}`}
+                    className={`p-3 sm:p-4 border-2 border-violet-800/50 bg-violet-950/40 rounded-full hover:bg-violet-900/50 transition-all duration-300 shadow-md`}
                   >
-                    {React.cloneElement(link.icon, { className: "w-6 h-6 sm:w-7 sm:h-7" })}
+                    {React.cloneElement(link.icon, { className: "w-6 h-6 sm:w-7 sm:h-7 text-slate-200" })}
                   </motion.a>
                 ))}
               </motion.div>
@@ -643,31 +531,32 @@ const Portfolio = () => {
               variants={itemVariants}
               className="flex-1 flex justify-center md:justify-end"
             >
+              {/* Framed hero photo */}
               <motion.div 
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  duration: 0.5,
-                  type: "spring",
-                  stiffness: 100
-                }}
-                className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-96 lg:h-96"
+                initial={{ opacity: 0, scale: 0.8, rotate: -2 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ duration: 0.6, type: 'spring', stiffness: 120 }}
+                className="relative"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-700/30 via-slate-900/30 to-black/30 rounded-full animate-pulse"></div>
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-slate-700/20 via-slate-600/20 to-slate-700/20 rounded-full blur-md"></div>
-                <motion.img
-                  src={leardImage}
-                  alt="Leard Kalludra"
-                  className="w-full h-full object-cover rounded-full border-4 border-slate-700/50 shadow-2xl"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <div className="absolute -inset-1 bg-gradient-to-br from-slate-700/10 via-slate-600/10 to-slate-700/10 rounded-full blur-xl"></div>
+                <div className="relative w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-[2rem] p-[3px] bg-gradient-to-br from-violet-500 via-fuchsia-500 to-indigo-500 shadow-2xl">
+                  <div className="absolute -inset-2 rounded-[2.5rem] bg-gradient-to-br from-fuchsia-600/30 via-violet-600/30 to-indigo-600/30 blur-2xl"></div>
+                  <div className="relative w-full h-full rounded-[1.9rem] overflow-hidden bg-violet-950/40 border border-violet-900/50 backdrop-blur">
+                    <img src={leardImage} alt="Leard Kalludra" className="w-full h-full object-cover" />
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-violet-950/70 to-transparent"></div>
+                  </div>
+                </div>
+                <div className="absolute -bottom-6 left-4 px-3 py-1 rounded-full text-xs bg-violet-900/60 border border-violet-800/50">Frontend Developer</div>
+                <div className="absolute -top-4 right-4 px-3 py-1 rounded-full text-xs bg-indigo-900/60 border border-indigo-800/50">React / Tailwind</div>
               </motion.div>
             </motion.div>
           </div>
         </div>
       </motion.section>
+
+      {/* Section divider */}
+      <div className="container mx-auto px-6 md:px-8 lg:px-12">
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-violet-800/40 to-transparent my-8"></div>
+      </div>
 
       {/* About Section */}
       <motion.section 
@@ -680,129 +569,101 @@ const Portfolio = () => {
         <div className="container mx-auto">
           <motion.div 
             variants={itemVariants}
-            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20 relative overflow-hidden"
+            className="bg-violet-950/40 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-violet-900/40 relative overflow-hidden"
           >
-            {/* Enhanced space background effects */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-800/20 via-slate-900/20 to-slate-800/20"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(56,189,248,0.05),rgba(0,0,0,0))]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.03),transparent_50%)]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.03),transparent_50%)]"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-900/30 to-transparent"></div>
             
             <div className="relative">
-              <motion.div 
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex items-center gap-4 mb-8"
-              >
-                <motion.div 
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  className="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 relative overflow-hidden group"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
-                  <Terminal className="w-8 h-8 text-slate-400 group-hover:text-slate-300 transition-colors duration-300" />
-                </motion.div>
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text">
-                  About Me
-                </h2>
-              </motion.div>
+            <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 rounded-xl bg-violet-900/40 border border-violet-800/50">
+                  <Terminal className="w-8 h-8 text-violet-300" />
+            </div>
+                <h2 className="text-3xl font-bold text-slate-100">About Me</h2>
+              </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="space-y-4"
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                {/* Text + bullets */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                  className="lg:col-span-2 space-y-5"
                 >
-                  <p className="text-slate-400 leading-relaxed">
-                    I'm a front-end developer who learned coding through structured education with experienced teachers and dedicated practice at home. I've built real-world applications like online doctor consultation platforms and second-hand clothing marketplaces. I'm passionate about creating meaningful web experiences and always eager to learn new technologies.
+                  <h3 className="text-xl font-semibold text-slate-100">I build clean, fast, and thoughtful interfaces</h3>
+                  <p className="text-slate-300 leading-relaxed">
+                    I’m a frontend developer specializing in React, Next.js and Tailwind CSS. I care about the details—animations that feel natural, readable code, and performance that keeps things snappy.
                   </p>
-                  <div className="flex gap-4 mt-6">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      'Responsive layouts and reusable components',
+                      'Smooth animations with production performance',
+                      'Clean Tailwind architectures',
+                      'API integration and state management',
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-300">
+                        <svg className="w-5 h-5 mt-0.5 text-violet-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Mini stats */}
+                  <div className="grid grid-cols-3 gap-3 pt-2">
+                    {[
+                      { label: 'Projects', value: '10+' },
+                      { label: 'Core Stack', value: 'React/Next' },
+                      { label: 'Focus', value: 'UI & Perf' },
+                    ].map((s, i) => (
+                      <div key={i} className="rounded-xl bg-violet-950/40 border border-violet-900/40 p-3 text-center">
+                        <div className="text-lg font-bold text-slate-100">{s.value}</div>
+                        <div className="text-[11px] tracking-wide text-slate-400 uppercase">{s.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTAs */}
+                  <div className="flex flex-wrap gap-3 pt-2">
                     <motion.a
-                      whileHover={{ scale: 1.05, rotate: 5 }}
-                      whileTap={{ scale: 0.95 }}
-                      href="https://github.com/LeardKalludra"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-all duration-300 flex items-center gap-2 group relative overflow-hidden"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
+                      href={cvFile}
+                      download="LeardKalludra-CV.pdf"
+                      className="px-5 py-3 rounded-lg bg-violet-600 text-white hover:bg-violet-700 ring-1 ring-inset ring-violet-400/30 hover:ring-violet-300/40 transition-all"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
-                      <Github className="w-5 h-5 group-hover:text-slate-200 transition-colors duration-300" />
-                      <span className="group-hover:text-slate-200 transition-colors duration-300">GitHub</span>
+                      Download CV
                     </motion.a>
-                    <motion.a
-                      whileHover={{ scale: 1.05, rotate: 5 }}
-                      whileTap={{ scale: 0.95 }}
-                      href="https://www.linkedin.com/posts/leard-kalludra-297209312_html-css-webdevelopment-activity-7212853347878330369-uMtX"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-800/70 transition-all duration-300 flex items-center gap-2 group relative overflow-hidden"
+                    <motion.button
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => scrollToSection('skills')}
+                      className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border-2 border-violet-400 text-violet-200 hover:bg-violet-900/30 transition-all"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
-                      <Linkedin className="w-5 h-5 group-hover:text-slate-200 transition-colors duration-300" />
-                      <span className="group-hover:text-slate-200 transition-colors duration-300">LinkedIn</span>
+                      View my skills
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                    </motion.button>
+                    <motion.a
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
+                      href="#contact"
+                      className="px-5 py-3 rounded-lg bg-violet-950/40 text-slate-200 border border-violet-900/40 hover:border-violet-800/60 transition-all"
+                    >
+                      Contact
                     </motion.a>
                   </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="grid grid-cols-2 gap-4"
+              </motion.div>
+
+                {/* Side note card */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                  className="rounded-2xl bg-violet-950/40 border border-violet-900/40 p-5"
                 >
-                  {[
-                    { 
-                      name: "React", 
-                      icon: (
-                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#61DAFB]">
-                          <path fill="currentColor" d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25zm0 17.25c-4.135 0-7.5-3.365-7.5-7.5s3.365-7.5 7.5-7.5 7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5z"/>
-                          <path fill="currentColor" d="M12 5.25c-3.722 0-6.75 3.028-6.75 6.75s3.028 6.75 6.75 6.75 6.75-3.028 6.75-6.75S15.722 5.25 12 5.25zm0 11.25c-2.485 0-4.5-2.015-4.5-4.5s2.015-4.5 4.5-4.5 4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
-                          <circle cx="12" cy="12" r="2.25" fill="currentColor"/>
-                        </svg>
-                      ),
-                      color: "hover:bg-[#61DAFB]/10"
-                    },
-                    { 
-                      name: "JavaScript", 
-                      icon: (
-                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#F7DF1E]">
-                          <path fill="currentColor" d="M3 3h18v18H3V3zm16.525 13.707c-.131-.821-.666-1.511-2.252-2.155-.552-.259-1.165-.438-1.349-.854-.068-.248-.078-.382-.034-.529.113-.484.687-.629 1.137-.495.293.09.563.315.732.676.775-.507.775-.507 1.316-.844-.203-.314-.304-.451-.439-.586-.473-.528-1.103-.798-2.126-.775l-.528.067c-.507.124-.991.395-1.283.754-.855.968-.608 2.655.427 3.354 1.023.765 2.521.933 2.712 1.653.18.878-.652 1.159-1.475 1.058-.607-.136-.945-.439-1.316-1.002l-1.372.788c.157.359.337.517.607.832 1.305 1.316 4.568 1.249 5.153-.754.021-.067.18-.528.056-1.237l.034.049zm-8.737-5.434h-1.686c0 1.453-.007 2.898-.007 4.354 0 .924.047 1.772-.104 2.033-.247.517-.886.451-1.175.359-.297-.146-.448-.349-.623-.641-.047-.078-.082-.146-.095-.146l-1.368.844c.229.473.563.879.994 1.137.641.383 1.502.507 2.404.305.588-.17 1.095-.519 1.358-1.059.384-.697.302-1.553.299-2.509.008-1.541 0-3.083 0-4.635l.003-.042z"/>
-                        </svg>
-                      ),
-                      color: "hover:bg-[#F7DF1E]/10"
-                    },
-                    { 
-                      name: "HTML/CSS", 
-                      icon: (
-                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#E34F26]">
-                          <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
-                        </svg>
-                      ),
-                      color: "hover:bg-[#E34F26]/10"
-                    },
-                    { 
-                      name: "Tailwind", 
-                      icon: (
-                        <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#38B2AC]">
-                          <path fill="currentColor" d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/>
-                        </svg>
-                      ),
-                      color: "hover:bg-[#38B2AC]/10"
-                    }
-                  ].map((item, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.05, rotate: 5 }}
-                      className={`p-4 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center gap-3 group ${item.color} transition-colors duration-300 relative overflow-hidden`}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
-                      {item.icon}
-                      <span className="text-sm text-slate-300 group-hover:text-slate-200 transition-colors duration-300">
-                        {item.name}
-                      </span>
-                    </motion.div>
-                  ))}
-                </motion.div>
+                  <h4 className="text-sm font-semibold text-slate-200 mb-3">What I’m like to work with</h4>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    Pragmatic, communicative, and organized. I ship iteratively, keep PRs clean, and focus on the outcome: a delightful experience for users.
+                  </p>
+              </motion.div>
               </div>
             </div>
           </motion.div>
@@ -820,95 +681,38 @@ const Portfolio = () => {
         <div className="container mx-auto">
           <motion.div 
             variants={itemVariants}
-            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20 relative overflow-hidden"
+            className="bg-violet-950/40 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-violet-900/40 relative overflow-hidden"
           >
-            {/* Enhanced space background effects */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-800/20 via-slate-900/20 to-slate-800/20"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(56,189,248,0.05),rgba(0,0,0,0))]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.03),transparent_50%)]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.03),transparent_50%)]"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-900/30 to-transparent"></div>
             
             <div className="relative">
-              <motion.div 
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex items-center gap-4 mb-8"
-              >
-                <motion.div 
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  className="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 relative overflow-hidden group"
+              <div className="flex items-center justify-between gap-4 mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-violet-900/40 border border-violet-800/50">
+                    <Code className="w-8 h-8 text-violet-300" />
+            </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-slate-100">Skills</h2>
+                    <div className="mt-2 h-px w-24 bg-gradient-to-r from-violet-400 to-fuchsia-400"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Single grid, no tabs */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {skillTabs.Frontend.map((skill, index) => (
+                <motion.div
+                  key={index}
+                    whileHover={{ y: -3 }}
+                    className={`p-4 rounded-xl bg-violet-950/40 border border-violet-900/40 flex items-center gap-3 group ${skill.color} transition-all duration-300 relative overflow-hidden hover:shadow-[0_0_0_1px_rgba(167,139,250,0.35)] hover:-translate-y-0.5`}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
-                  <Code className="w-8 h-8 text-slate-400 group-hover:text-slate-300 transition-colors duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent group-hover:opacity-0 transition-opacity duration-300"></div>
+                  {skill.icon}
+                    <span className="text-sm text-slate-200 group-hover:text-white transition-colors duration-300">
+                    {skill.name}
+                  </span>
                 </motion.div>
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 text-transparent bg-clip-text">
-                  Skills
-                </h2>
-              </motion.div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                {[
-                  { 
-                    name: "React", 
-                    icon: (
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#61DAFB]">
-                        <path fill="currentColor" d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25zm0 17.25c-4.135 0-7.5-3.365-7.5-7.5s3.365-7.5 7.5-7.5 7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5z"/>
-                        <path fill="currentColor" d="M12 5.25c-3.722 0-6.75 3.028-6.75 6.75s3.028 6.75 6.75 6.75 6.75-3.028 6.75-6.75S15.722 5.25 12 5.25zm0 11.25c-2.485 0-4.5-2.015-4.5-4.5s2.015-4.5 4.5-4.5 4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
-                        <circle cx="12" cy="12" r="2.25" fill="currentColor"/>
-                      </svg>
-                    ),
-                    color: "hover:bg-[#61DAFB]/10"
-                  },
-                  { 
-                    name: "JavaScript", 
-                    icon: (
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#F7DF1E]">
-                        <path fill="currentColor" d="M3 3h18v18H3V3zm16.525 13.707c-.131-.821-.666-1.511-2.252-2.155-.552-.259-1.165-.438-1.349-.854-.068-.248-.078-.382-.034-.529.113-.484.687-.629 1.137-.495.293.09.563.315.732.676.775-.507.775-.507 1.316-.844-.203-.314-.304-.451-.439-.586-.473-.528-1.103-.798-2.126-.775l-.528.067c-.507.124-.991.395-1.283.754-.855.968-.608 2.655.427 3.354 1.023.765 2.521.933 2.712 1.653.18.878-.652 1.159-1.475 1.058-.607-.136-.945-.439-1.316-1.002l-1.372.788c.157.359.337.517.607.832 1.305 1.316 4.568 1.249 5.153-.754.021-.067.18-.528.056-1.237l.034.049zm-8.737-5.434h-1.686c0 1.453-.007 2.898-.007 4.354 0 .924.047 1.772-.104 2.033-.247.517-.886.451-1.175.359-.297-.146-.448-.349-.623-.641-.047-.078-.082-.146-.095-.146l-1.368.844c.229.473.563.879.994 1.137.641.383 1.502.507 2.404.305.588-.17 1.095-.519 1.358-1.059.384-.697.302-1.553.299-2.509.008-1.541 0-3.083 0-4.635l.003-.042z"/>
-                      </svg>
-                    ),
-                    color: "hover:bg-[#F7DF1E]/10"
-                  },
-                  { 
-                    name: "HTML", 
-                    icon: (
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#E34F26]">
-                        <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
-                      </svg>
-                    ),
-                    color: "hover:bg-[#E34F26]/10"
-                  },
-                  { 
-                    name: "CSS", 
-                    icon: (
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#264DE4]">
-                        <path fill="currentColor" d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm9.75 3.75l-.232 2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
-                      </svg>
-                    ),
-                    color: "hover:bg-[#264DE4]/10"
-                  },
-                  { 
-                    name: "Tailwind", 
-                    icon: (
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 text-[#38B2AC]">
-                        <path fill="currentColor" d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/>
-                      </svg>
-                    ),
-                    color: "hover:bg-[#38B2AC]/10"
-                  }
-                ].map((skill, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{ scale: 1.05, rotate: 5 }}
-                    className={`p-4 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center gap-3 group ${skill.color} transition-colors duration-300 relative overflow-hidden`}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 via-slate-800/20 to-slate-700/20 group-hover:opacity-0 transition-opacity duration-300"></div>
-                    {skill.icon}
-                    <span className="text-sm text-slate-300 group-hover:text-slate-200 transition-colors duration-300">
-                      {skill.name}
-                    </span>
-                  </motion.div>
-                ))}
+              ))}
               </div>
             </div>
           </motion.div>
@@ -926,58 +730,57 @@ const Portfolio = () => {
         <div className="container mx-auto">
           <motion.div 
             variants={itemVariants}
-            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-700/20"
+            className="bg-violet-950/40 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-xl border border-violet-900/40"
           >
             <div className="flex items-center gap-4 mb-6 sm:mb-8">
-              <FolderGit className="w-8 h-8 sm:w-10 sm:h-10 text-slate-400" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-200">Projects</h2>
+              <FolderGit className="w-8 h-8 sm:w-10 sm:h-10 text-violet-300" />
+              <div>
+                <h2 className="text-3xl font-bold text-slate-100">Projects</h2>
+                <div className="mt-2 h-px w-28 bg-gradient-to-r from-violet-400 to-fuchsia-400"></div>
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {projects.map((project, index) => (
                 <motion.div
                   key={index}
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-slate-800/50 rounded-xl overflow-hidden shadow-lg p-4 border border-slate-700/50 h-full flex flex-col"
+                   whileHover={{ y: -3 }}
+                   transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+                   className="rounded-xl overflow-hidden border border-violet-900/40 bg-violet-950/40 h-full flex flex-col transition-shadow duration-300 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)] hover:border-violet-800/60"
                 >
                   {project.image && (
-                    <div className="mb-4 rounded-lg overflow-hidden">
+                     <div className="mb-0">
                       <img 
                         src={project.image} 
                         alt={project.title}
-                        className="w-full h-40 sm:h-48 object-cover"
+                         className="w-full h-40 sm:h-48 object-cover transition-transform duration-500 hover:scale-[1.03]"
                       />
                     </div>
                   )}
-                  <div className="flex items-center gap-2 mb-3">
-                    <FolderGit className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400" />
-                    <h3 className="text-base sm:text-lg font-semibold text-slate-200">{project.title}</h3>
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-400 mb-4 flex-grow">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-3">
+                   <div className="p-4 flex-1 flex flex-col">
+                     <h3 className="text-base sm:text-lg font-semibold text-slate-100 mb-2">{project.title}</h3>
+                     <p className="text-xs sm:text-sm text-slate-300 mb-4 flex-grow">{project.description}</p>
+                     <div className="flex flex-wrap gap-2 mb-4">
                     {project.technologies.map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="px-2 py-1 text-xs sm:text-sm rounded-md bg-slate-700/50 text-slate-300 border border-slate-600/50"
+                           className="px-2 py-1 text-xs sm:text-sm rounded-md bg-violet-900/40 text-slate-200 border border-violet-800/40"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <div className="border-t border-slate-700/50 my-3 sm:my-4"></div>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="flex justify-end"
-                  >
+                     {project.link && (
                     <a
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-slate-700/50 text-slate-200 hover:bg-slate-700/70 transition-colors duration-300 text-sm sm:text-base"
+                         className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700 ring-1 ring-inset ring-violet-400/30 hover:ring-violet-300/40 transition-all duration-300 text-sm sm:text-base self-end"
                     >
                       <Code className="w-4 h-4 sm:w-5 sm:h-5" />
                       View Project
                     </a>
-                  </motion.div>
+                     )}
+                   </div>
                 </motion.div>
               ))}
             </div>
@@ -996,9 +799,9 @@ const Portfolio = () => {
         <div className="container mx-auto">
           <motion.div 
             variants={itemVariants}
-            className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-slate-700/20 relative"
+            className="bg-violet-950/40 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-violet-900/40 relative"
           >
-            <h2 className="text-3xl font-bold mb-6 text-slate-200">Contact Me</h2>
+            <h2 className="text-3xl font-bold mb-6 text-slate-100">Contact Me</h2>
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <form className="space-y-6" onSubmit={(e) => {
@@ -1051,12 +854,12 @@ const Portfolio = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <label className="block text-slate-400 mb-2">Name</label>
+                    <label className="block text-slate-200 mb-2">Name</label>
                     <input 
                       type="text" 
                       name="name"
                       required
-                      className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 focus:border-slate-600 focus:ring-2 focus:ring-slate-600/50 outline-none text-slate-200 transition-all duration-300"
+                      className="w-full px-4 py-2 rounded-lg bg-violet-950/40 border border-violet-900/40 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/20 outline-none text-slate-100 transition-all duration-300"
                       placeholder="Your name"
                     />
                   </motion.div>
@@ -1065,12 +868,12 @@ const Portfolio = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <label className="block text-slate-400 mb-2">Email</label>
+                    <label className="block text-slate-200 mb-2">Email</label>
                     <input 
                       type="email" 
                       name="email"
                       required
-                      className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 focus:border-slate-600 focus:ring-2 focus:ring-slate-600/50 outline-none text-slate-200 transition-all duration-300"
+                      className="w-full px-4 py-2 rounded-lg bg-violet-950/40 border border-violet-900/40 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/20 outline-none text-slate-100 transition-all duration-300"
                       placeholder="Your email"
                     />
                   </motion.div>
@@ -1079,12 +882,12 @@ const Portfolio = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.7 }}
                   >
-                    <label className="block text-slate-400 mb-2">Subject</label>
+                    <label className="block text-slate-200 mb-2">Subject</label>
                     <input 
                       type="text" 
                       name="subject"
                       required
-                      className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 focus:border-slate-600 focus:ring-2 focus:ring-slate-600/50 outline-none text-slate-200 transition-all duration-300"
+                      className="w-full px-4 py-2 rounded-lg bg-violet-950/40 border border-violet-900/40 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/20 outline-none text-slate-100 transition-all duration-300"
                       placeholder="Subject"
                     />
                   </motion.div>
@@ -1093,11 +896,11 @@ const Portfolio = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8 }}
                   >
-                    <label className="block text-slate-400 mb-2">Message</label>
+                    <label className="block text-slate-200 mb-2">Message</label>
                     <textarea 
                       name="message"
                       required
-                      className="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 focus:border-slate-600 focus:ring-2 focus:ring-slate-600/50 outline-none text-slate-200 transition-all duration-300 resize-none"
+                      className="w-full px-4 py-2 rounded-lg bg-violet-950/40 border border-violet-900/40 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/20 outline-none text-slate-100 transition-all duration-300 resize-none"
                       rows="4"
                       placeholder="Your message"
                     ></textarea>
@@ -1106,7 +909,7 @@ const Portfolio = () => {
                     type="submit"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-full px-6 py-3 rounded-full bg-slate-800 text-slate-200 font-semibold hover:bg-slate-700 transition-all duration-300 shadow-lg shadow-slate-800/20"
+                    className="w-full px-6 py-3 rounded-full bg-violet-600 text-white font-semibold hover:bg-violet-700 ring-1 ring-inset ring-violet-400/30 hover:ring-violet-300/40 transition-all duration-300 shadow-lg"
                   >
                     Send Message
                   </motion.button>
@@ -1119,8 +922,8 @@ const Portfolio = () => {
                 className="flex-1 flex flex-col justify-center items-center space-y-6"
               >
                 <div className="text-center">
-                  <h3 className="text-xl font-semibold text-slate-200 mb-4">Get in Touch</h3>
-                  <p className="text-slate-400 mb-6">Feel free to reach out to me through any of these channels:</p>
+                  <h3 className="text-xl font-semibold text-slate-100 mb-4">Get in Touch</h3>
+                  <p className="text-slate-300 mb-6">Feel free to reach out to me through any of these channels:</p>
                 </div>
                 {socialLinks.map((link, index) => (
                   <motion.a
@@ -1130,20 +933,15 @@ const Portfolio = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.2, rotate: 360 }}
                     whileTap={{ scale: 0.9 }}
-                    className={`p-4 border-2 border-slate-700 bg-slate-800/50 rounded-full hover:bg-slate-800/70 transition-all duration-300 shadow-lg shadow-slate-800/10 ${link.color}`}
+                    className={`p-4 border-2 border-violet-800/50 bg-violet-950/40 rounded-full hover:bg-violet-900/50 transition-all duration-300 shadow-md`}
                   >
-                    {React.cloneElement(link.icon, { className: "w-6 h-6 sm:w-7 sm:h-7" })}
+                    {React.cloneElement(link.icon, { className: "w-6 h-6 sm:w-7 sm:h-7 text-slate-200" })}
                   </motion.a>
                 ))}
                 <div className="mt-6 text-center">
-                  <p className="text-slate-400">Or send me an email at:</p>
-                  <a 
-                    href="mailto:leardkalludra@gmail.com" 
-                    className="text-slate-200 hover:text-slate-300 transition-colors duration-300"
-                  >
-                    leardkalludra@gmail.com
-                  </a>
-                </div>
+                  <p className="text-slate-300">Or send me an email at:</p>
+                  <a href="mailto:leardkalludra@gmail.com" className="text-violet-300 hover:text-violet-200 transition-colors duration-300">leardkalludra@gmail.com</a>
+              </div>
               </motion.div>
             </div>
 
@@ -1166,13 +964,13 @@ const Portfolio = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative py-12 px-6 bg-slate-900/50 backdrop-blur-xl border-t border-slate-700/20"
+        className="relative py-12 px-6 bg-violet-950/50 backdrop-blur-xl border-t border-violet-900/40"
       >
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex flex-col items-center md:items-start gap-4">
-              <h3 className="text-xl font-bold text-slate-200">Leard Kalludra</h3>
-              <p className="text-slate-400 text-center md:text-left max-w-md">
+              <h3 className="text-xl font-bold text-slate-100">Leard Kalludra</h3>
+              <p className="text-slate-300 text-center md:text-left max-w-md">
                 Creating beautiful and functional web experiences with a passion for design and development.
               </p>
             </div>
@@ -1187,13 +985,13 @@ const Portfolio = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.2, rotate: 360 }}
                     whileTap={{ scale: 0.9 }}
-                    className={`p-3 border-2 border-slate-700 bg-slate-800/50 rounded-full hover:bg-slate-800/70 transition-all duration-300 shadow-lg shadow-slate-800/10 ${link.color}`}
+                    className={`p-3 sm:p-4 border-2 border-violet-800/50 bg-violet-950/40 rounded-full hover:bg-violet-900/50 transition-all duration-300 shadow-md`}
                   >
-                    {link.icon}
+                    {React.cloneElement(link.icon, { className: "w-6 h-6 sm:w-7 sm:h-7 text-slate-200" })}
                   </motion.a>
                 ))}
               </div>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-300">
                 © {new Date().getFullYear()} Leard Kalludra. All rights reserved.
               </p>
             </div>
@@ -1205,7 +1003,7 @@ const Portfolio = () => {
       {showScrollToTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-200"
+          className="fixed bottom-8 right-8 bg-violet-600 text-white p-3 rounded-full shadow-lg hover:bg-violet-700 transition-colors duration-200 border border-violet-400/30"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
