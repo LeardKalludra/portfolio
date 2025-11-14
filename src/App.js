@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, X, Linkedin, Github, Mail, Code, Terminal, Monitor, FolderGit } from 'lucide-react';
 import leardImage from './leardKalludra.png';
 import eApartamentImage from './e-apartament.png';
+import shujtizaLogo from './shujtiza-logo.png'
 import defiXImage from './Defi-x.png';
 import hirehub from './HireHub.png';
 import napolis from './naplis.png';
@@ -114,6 +115,13 @@ const Portfolio = () => {
 
   const projects = [
     {
+      title: 'Shujtiza',
+      description: 'Shujtiza is a food marketplace app built with Next.js and React Native, connecting users with leftover food from local businesses at discounted prices. I built both the web and mobile front-ends with a focus on a smooth user experience.',
+      technologies: ['Next.js', 'Tailwind CSS', 'Python','Django'],
+      link: 'https://www.shujtiza.com/',
+      image: shujtizaLogo
+    },
+    {
       title: 'E-apartment',
       description: 'E-apartment is an innovative platform for seamless apartment rentals and postings. Users can list their apartments online, explore available rentals, and use features like room sharing to find the perfect living arrangement.',
       technologies: ['HTML', 'CSS', 'JavaScript'],
@@ -125,20 +133,20 @@ const Portfolio = () => {
       description: 'Hire Hub is a free platform connecting recruiters and skilled laborers across various industries. It offers real-time chat, video interviews, job postings, and advanced search filters to streamline the hiring process',
       technologies: ["HTML", "Tailwind CSS", "JavaScript"],
       image: hirehub,
-      link: 'https://viewmyhirehub.online/'
+      link: 'https://myhirehub.online/'
     },
     {
       title: "Napoli's Italian Restaurant",
       description: "Napoli's Italian Restaurant serves authentic Italian dishes made with fresh ingredients and traditional recipes. Known for its homemade pizza crusts, vine-ripened tomato sauce, and real provolone cheese, Napoli's offers a variety of pizzas, pastas, subs, and more—all in a warm, welcoming atmosphere.",
       technologies: ["HTML", "Tailwind CSS", "JavaScript"],
-      link: "https://napolis.netlify.app/",
+      link: "https://napolis.com/",
       image: napolis
     },
    
    
   ];
 
-  // Skill categories for tabs
+
   const skillTabs = React.useMemo(() => ({
     Frontend: [
       { name: 'React', color: 'hover:bg-[#61DAFB]/10', icon: (
