@@ -2,12 +2,13 @@ import * as React from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, X, Linkedin, Github, Mail, Code, Terminal, Monitor, FolderGit } from 'lucide-react';
 import leardImage from './leardKalludra.png';
-import eApartamentImage from './e-apartament.png';
-import shujtizaLogo from './shujtiza-logo.png'
+import eApartamentImage from './e-aparament.png';
+import shujtizaLogo from './shujtiza.png'
 import defiXImage from './Defi-x.png';
 import hirehub from './HireHub.png';
 import napolis from './naplis.png';
 import cvFile from './LeardKalludra-CV.pdf';
+import image from './image.png'
 
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -115,6 +116,13 @@ const Portfolio = () => {
 
   const projects = [
     {
+      title: "Aether Kosovo",
+      description: "Global Raginal Weather checking with active users and Many Interactive Games.",
+      technologies: ["React", "Tailwind CSS"],
+      link: "https://aetherkosovo.netlify.app/",
+      image: image
+    },
+    {
       title: 'Shujtiza',
       description: 'Shujtiza is a food marketplace app built with Next.js and React Native, connecting users with leftover food from local businesses at discounted prices. I built both the web and mobile front-ends with a focus on a smooth user experience.',
       technologies: ['Next.js', 'Tailwind CSS', 'Python','Django'],
@@ -142,6 +150,8 @@ const Portfolio = () => {
       link: "https://napolis.com/",
       image: napolis
     },
+  
+   
    
    
   ];
@@ -262,8 +272,7 @@ const Portfolio = () => {
         <motion.div
           className="absolute -top-1/3 -left-1/4 w-[140%] h-[80%] rotate-[-12deg]"
             style={{
-            background:
-              'linear-gradient(90deg, rgba(139,92,246,0.08), rgba(217,70,239,0.08) 50%, rgba(99,102,241,0.08))',
+              background:' radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent)',
             filter: 'blur(32px)'
           }}
           animate={{ x: ['-5%', '5%', '-5%'] }}
@@ -760,7 +769,7 @@ const Portfolio = () => {
                       <img 
                         src={project.image} 
                         alt={project.title}
-                         className="w-full h-40 sm:h-48 object-cover transition-transform duration-500 hover:scale-[1.03]"
+                         className="w-full h-50 sm:h-50 object-cover transition-transform duration-500 hover:scale-[1.03]"
                       />
                     </div>
                   )}
